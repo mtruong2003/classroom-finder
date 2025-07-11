@@ -36,10 +36,10 @@ def avail_class(class_list, time_input):
         if not room.startswith(building_input):
             avail_room.discard(room)
     
-    print(avail_room)
+    return(avail_room)
 
 def main():
-    with open("CAS.json") as file:
+    with open("QST.json") as file:
         data = json.load(file)
     
     # print(data)

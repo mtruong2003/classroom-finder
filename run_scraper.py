@@ -3,6 +3,7 @@ import requests
 import time
 import json
 import csv 
+from alive_progress import alive_bar
 
 HEADERS = {
         'Content-Type': 'application/json',
@@ -29,7 +30,6 @@ def parjson(data: dict):
     class_list = []
     for room in classes:
         class_list.append(get_class_info(room))
-    # print(class_list)
     return class_list
 
 def get_class_info(classdata: dict):
@@ -66,19 +66,21 @@ def data_to_csv(class_list):
         dict_writer.writerows(class_list)
 
 def get_json_data(acad_group):
+    class_list = [] 
     url = "https://public.mybustudent.bu.edu/psc/BUPRD/EMPLOYEE/SA/s/WEBLIB_HCX_CM.H_CLASS_SEARCH.FieldFormula.IScript_ClassSearch?institution=BU001&term=2258&acad_group="+acad_group+"&page="
     result = retry_request(url,5,30)
     data = result.json() 
     total_page = int(data['pageCount'])
-    class_list = []
-    for page in range(1,total_page+1):
-        result = retry_request(url+str(page),5,30)
-        data = result.json()
-        classes = data['classes']
-        print(url+str(page))
-        for room in classes:
-            if get_class_info(room):
-                class_list.append(get_class_info(room))
+    with alive_bar(total_page) as bar: 
+        for page in range(1,total_page+1):
+            result = retry_request(url+str(page),5,30)
+            data = result.json()
+            classes = data['classes']
+            #print(url+str(page))
+            bar()
+            for room in classes:
+                if get_class_info(room):
+                    class_list.append(get_class_info(room))
     with open(acad_group+".json", "w") as file:
         json.dump(class_list, file)
         file.close()
@@ -92,7 +94,12 @@ def main():
     # data_to_csv(class_list)
     # doc = BeautifulSoup(result.content, "html.parser")
     # print(doc)
-    get_json_data("CGSNS")
+    
+    
+    building_list = ["CDS", "QST", "CGS", "COM", "ENG", "CAS"]
+
+    for building in building_list: 
+        get_json_data(building)
 
 if __name__ == "__main__":
     main()
