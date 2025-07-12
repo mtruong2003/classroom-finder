@@ -85,7 +85,7 @@ with col2:
         "cursor: default;'>ClassroomFinder @ BU</div>",
         unsafe_allow_html=True)
 
-#ClassroomFinder subtitle 
+#Subtitle 
 col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.markdown(f"""
@@ -285,7 +285,7 @@ selected_building = st.selectbox("**Select a Building**", list(class_map.keys())
 left, right = st.columns(2)
 if left.button("**Available Now**", use_container_width=True):
     st.session_state.show_future = False 
-    cur_time = est_zone.now().time()
+    cur_time = est_zone.time()
     st.write(cur_time)
     if not selected_building:
         selected_building = "All Buildings"
@@ -308,7 +308,7 @@ if st.session_state.show_future:
         selected_day = today 
         st.write(selected_day)
     if not selected_time: 
-        cur_time = est_zone.now().time()
+        cur_time = est_zone.time()
         selected_time = cur_time 
         st.write(selected_time)
     if not selected_building:
