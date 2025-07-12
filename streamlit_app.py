@@ -1,9 +1,11 @@
 import streamlit as st
 import json 
 from datetime import datetime
-
+from zoneinfo import ZoneInfo 
 
 st.set_page_config(page_title="ClassroomFinder", layout="centered")
+
+est_zone = datetime.now(ZoneInfo("America/New_York"))
 
 #CSS STUFF START 
 
@@ -67,9 +69,8 @@ for building in building_list:
         file.close()
 
 #Current time 
-now = datetime.now()
-current_time = now.strftime("%I:%M %p")
-current_day = now.strftime('%A')
+current_time = est_zone.strftime("%I:%M %p")
+current_day = est_zone.strftime('%A')
 
 #SPACE
 st.write("")
@@ -288,7 +289,7 @@ if left.button("**Available Now**", use_container_width=True):
     if not selected_building:
         selected_building = "All Buildings"
     building_abbr = class_map[selected_building]
-    today = now.strftime('%a')[:2]
+    today = est_zone.strftime('%a')[:2]
     display_data(cur_time, today, building_abbr)
 
 if "show_future" not in st.session_state:
@@ -301,7 +302,7 @@ if st.session_state.show_future:
     selected_day = st.selectbox("**Select a Day**", list(day_map.keys()), index=None, placeholder="Select a Day")
     selected_time = st.time_input("**Select a Time**", value=None)
     if not selected_day:
-        today = now.strftime('%A')
+        today = est_zone.strftime('%A')
         selected_day = today 
     if not selected_time: 
         cur_time = datetime.now().time()
