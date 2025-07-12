@@ -49,7 +49,7 @@ def get_class_info(classdata: dict):
         return hours + minutes 
     
     #Safeguarding for No Room and TBA in data 
-    if facility['facility_id'] == "NO ROOM" or facility['facility_id'] == "TBA":
+    if facility['facility_id'] == "NO ROOM" or facility['facility_id'] == "TBA" or facility['days'] == "TBA":
         return 
     
     class_info['facility_id'] = facility['facility_id']
@@ -96,10 +96,30 @@ def main():
     # print(doc)
     
     
-    building_list = ["CDS", "QST", "CGS", "COM", "ENG", "CAS"]
+    building_list = [ 
+        "CDS", 
+        "QST", 
+        "CGS", 
+        "COM", 
+        "ENG", 
+        "CAS", 
+        "MET", 
+        "GRS", 
+        "CFA", 
+        "SAR", 
+        "SDM", 
+        "SHA", 
+        "LAW", 
+        "MED",
+        "SPH",
+        "SSW",
+        "STH",
+        "WED",
+        
+        ]
 
     for building in building_list: 
         get_json_data(building)
-
+        
 if __name__ == "__main__":
     main()
