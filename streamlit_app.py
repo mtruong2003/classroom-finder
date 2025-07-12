@@ -285,7 +285,7 @@ selected_building = st.selectbox("**Select a Building**", list(class_map.keys())
 left, right = st.columns(2)
 if left.button("**Available Now**", use_container_width=True):
     st.session_state.show_future = False 
-    cur_time = datetime.now().time()
+    cur_time = est_zone.now().time()
     if not selected_building:
         selected_building = "All Buildings"
     building_abbr = class_map[selected_building]
@@ -305,7 +305,7 @@ if st.session_state.show_future:
         today = est_zone.strftime('%A')
         selected_day = today 
     if not selected_time: 
-        cur_time = datetime.now().time()
+        cur_time = est_zone.now().time()
         selected_time = cur_time 
     if not selected_building:
         selected_building = "All Buildings"
@@ -314,7 +314,6 @@ if st.session_state.show_future:
         day_abbr = day_map[selected_day]
         display_data(selected_time, day_abbr, building_abbr)
 
-st.balloons()
     # Instruction for updating main website 
     # git add . 
     # git commit 
