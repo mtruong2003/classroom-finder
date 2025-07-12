@@ -200,6 +200,22 @@ def free_times(meeting_times):
 
   return free_times
 
+def display_data(selected_time, day_abbr, building_abbr):
+    #Second level button filter for current availability and future availability 
+    available_room = avail_class(master_list, selected_time, day_abbr, building_abbr)
+    st.write(f"**At {current_day} {current_time}, {len(available_room)} room(s) were found:**")
+    # st.write(available_room if available_room else "No rooms available at this time.")
+    room_items = list(available_room.items())
+    cols = st.columns(2)
+    for i, (room, available_room[room]) in enumerate(room_items):
+        with cols[i%2]:
+            st.markdown(f"""
+    <div class="card">
+        <span class="room-label">🏫 <strong>{room}</strong></span>
+        <span class="time-label">⏰ {available_room[room]}</span>
+    </div>
+    """, unsafe_allow_html=True)
+
 class_map = {
     "All Buildings": "all",
     "African-American Studies": "AAS",
@@ -253,7 +269,6 @@ class_map = {
 }
 
 day_map = {
-    "Today": now.strftime('%a')[:2],
     "Monday": "Mo",
     "Tuesday": "Tu",
     "Wednesday": "We",
@@ -264,72 +279,46 @@ day_map = {
 }
 
 #First level filter for building 
-selected_building = st.selectbox("**Select a Building**", list(class_map.keys()))
-building_abbr = class_map[selected_building]
+selected_building = st.selectbox("**Select a Building**", list(class_map.keys()), index=None, placeholder = "Select a Building")
 
-#SPACING 
-st.write("")
-
-#Second level button filter for current availability and future availability 
 left, right = st.columns(2)
 if left.button("**Available Now**", use_container_width=True):
     st.session_state.show_future = False 
     cur_time = datetime.now().time()
-    available_room = avail_class(master_list, cur_time, day_map['Today'], building_abbr)
-    st.write(f"**At {current_day} {current_time}, {len(available_room)} room(s) were found:**")
-    # st.write(available_room if available_room else "No rooms available at this time.")
-    room_items = list(available_room.items())
-    cols = st.columns(2)
-    for i, (room, available_room[room]) in enumerate(room_items):
-        with cols[i%2]:
-            st.markdown(f"""
-    <div class="card">
-        <span class="room-label">🏫 <strong>{room}</strong></span>
-        <span class="time-label">⏰ {available_room[room]}</span>
-    </div>
-    """, unsafe_allow_html=True)
-        
+    if not selected_building:
+        selected_building = "All Buildings"
+    building_abbr = class_map[selected_building]
+    today = now.strftime('%a')[:2]
+    display_data(cur_time, today, building_abbr)
+
 if "show_future" not in st.session_state:
     st.session_state.show_future = False
 
 if right.button("**Future Availability**", use_container_width=True):
     st.session_state.show_future = True 
-
+  
 if st.session_state.show_future: 
-    selected_day = st.selectbox("**Select a Day**", list(day_map.keys()), index=0)
+    selected_day = st.selectbox("**Select a Day**", list(day_map.keys()), index=None, placeholder="Select a Day")
     selected_time = st.time_input("**Select a Time**", value=None)
-    day_abbr = day_map[selected_day]
-    #Display the available list based on selected time and 
-    available_room = avail_class(master_list, selected_time, day_abbr, building_abbr)
-    st.write(f"**At {selected_day} {selected_time}, {len(available_room)} room(s) will be available:**")
-    # st.write(available_room if available_room else "No rooms available at this time.")
-    room_items = list(available_room.items())
-    cols = st.columns(2)
-    for i, (room, available_room[room]) in enumerate(room_items):
-        with cols[i%2]:
-            st.markdown(f"""
-    <div class="card">
-        <span class="room-label">🏫 <strong>{room}</strong></span>
-        <span class="time-label">⏰ {available_room[room]}</span>
-    </div>
-    """, unsafe_allow_html=True)
+    if not selected_day:
+        today = now.strftime('%A')
+        selected_day = today 
+    if not selected_time: 
+        cur_time = datetime.now().time()
+        selected_time = cur_time 
+    if not selected_building:
+        selected_building = "All Buildings"
+    if selected_building and selected_time and selected_day:
+        building_abbr = class_map[selected_building]
+        day_abbr = day_map[selected_day]
+        display_data(selected_time, day_abbr, building_abbr)
 
-        # room_items = list(available_room.items())
-        # cols = st.columns(2)
-        # for i, (room, available_room[room]) in enumerate(room_items):
-        #     with cols[i%2]:
-        #             st.markdown("---")
-        #             st.markdown(f" **🏫 {room}** ")
-        #             st.write(f"⏰ *{available_room[room]}*")
-        #             st.markdown("---")
-                #st.markdown(f"""
-                 #           **🏫 {room}** 
-                 #           \n ⏱️ *{available_room[room]}* """)
-    
-    #for room, available_room[room] in available_room.items():
-    #    with st.container():
-     #       st.markdown(f"**🏫 {room}** \n⏱️ *{available_room[room]}* ")
-# Instruction for updating main website 
-# git add . 
-# git commit 
-# git push 
+st.balloons()
+    # Instruction for updating main website 
+    # git add . 
+    # git commit 
+    # git push 
+
+
+#SPACING 
+st.write("")
