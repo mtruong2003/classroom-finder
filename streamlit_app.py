@@ -3,7 +3,7 @@ import json
 from datetime import datetime
 
 
-st.set_page_config(page_title="ClassroomFinder", layout="wide")
+st.set_page_config(page_title="ClassroomFinder", layout="centered")
 
 #CSS STUFF START 
 
@@ -71,14 +71,23 @@ now = datetime.now()
 current_time = now.strftime("%I:%M %p")
 current_day = now.strftime('%A')
 
+#SPACE
 st.write("")
-st.markdown("**ClassroomFinder @ BU**"
-)
+
+#ClassroomFinder @ BU Title 
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.write(
+        "<div style='text-align: center; "
+        "font-weight: bold; "
+        "font-size: 32px; "
+        "cursor: default;'>ClassroomFinder @ BU</div>",
+        unsafe_allow_html=True)
 
 #SPACE
 st.write("")
 
-#Algo
+#ALGO BEGINS 
 def avail_class(class_list, selected_time, selected_day, selected_building):
     cur_day = selected_day
     cur_time = selected_time.hour + selected_time.minute / 60
@@ -140,7 +149,7 @@ def avail_class(class_list, selected_time, selected_day, selected_building):
         avail_for = avail_room[room][1] - cur_time
         minute_str = str(int((avail_for%1) * 60))
         hour_str = str(int(avail_for))
-        avail_room[room] = "Available for "+ hour_str +" hours " + minute_str+" minutes"
+        avail_room[room] = "Free for "+ hour_str +" hours " + minute_str+" minutes"
     return avail_room
 
 def merge_intervals(intervals): 
@@ -162,6 +171,7 @@ def merge_intervals(intervals):
           merged.append(current)
 
   return merged 
+#ALGO ENDS 
 
 def free_times(meeting_times):
   free_times = []
@@ -257,7 +267,7 @@ if left.button("**Available Now**", use_container_width=True):
     st.session_state.show_future = False 
     cur_time = datetime.now().time()
     available_room = avail_class(master_list, cur_time, day_map['Today'], building_abbr)
-    st.write(f"**At {current_day} at {current_time}, found {len(available_room)} available room(s):**")
+    st.write(f"**As of {current_day} at {current_time}, {len(available_room)} available room(s) were found:**")
     # st.write(available_room if available_room else "No rooms available at this time.")
     room_items = list(available_room.items())
     cols = st.columns(2)
@@ -273,16 +283,16 @@ if left.button("**Available Now**", use_container_width=True):
 if "show_future" not in st.session_state:
     st.session_state.show_future = False
 
-if right.button("**Future availability**", use_container_width=True):
+if right.button("**Future Availability**", use_container_width=True):
     st.session_state.show_future = True 
 
 if st.session_state.show_future: 
-    selected_day = st.selectbox("**Select a Day**", list(day_map.keys()))
+    selected_day = st.selectbox("**Select a Day**", list(day_map.keys()), index=0)
     selected_time = st.time_input("**Select a Time**", value="now")
     day_abbr = day_map[selected_day]
     #Display the available list based on selected time and 
     available_room = avail_class(master_list, selected_time, day_abbr, building_abbr)
-    st.write(f"**At {selected_day} at {selected_time}, found {len(available_room)} available room(s):**")
+    st.write(f"**As of {selected_day} at {selected_time}, {len(available_room)} available room(s) were found:**")
     # st.write(available_room if available_room else "No rooms available at this time.")
     room_items = list(available_room.items())
     cols = st.columns(2)

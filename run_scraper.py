@@ -95,7 +95,6 @@ def main():
     # doc = BeautifulSoup(result.content, "html.parser")
     # print(doc)
     
-    
     building_list = [ 
         "CDS", 
         "QST", 
@@ -115,7 +114,6 @@ def main():
         "SSW",
         "STH",
         "WED",
-        
         ]
 
     for building in building_list: 
