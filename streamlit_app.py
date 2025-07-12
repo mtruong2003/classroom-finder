@@ -84,6 +84,15 @@ with col2:
         "cursor: default;'>ClassroomFinder @ BU</div>",
         unsafe_allow_html=True)
 
+#ClassroomFinder subtitle 
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.markdown(f"""
+    <div style="text-align:center; font-size: 17px; cursor: default;">
+        Fall, 2025 | {current_day} {current_time}
+</div>
+""", unsafe_allow_html=True)
+    
 #SPACE
 st.write("")
 
@@ -267,7 +276,7 @@ if left.button("**Available Now**", use_container_width=True):
     st.session_state.show_future = False 
     cur_time = datetime.now().time()
     available_room = avail_class(master_list, cur_time, day_map['Today'], building_abbr)
-    st.write(f"**As of {current_day} at {current_time}, {len(available_room)} available room(s) were found:**")
+    st.write(f"**At {current_day} {current_time}, {len(available_room)} room(s) were found:**")
     # st.write(available_room if available_room else "No rooms available at this time.")
     room_items = list(available_room.items())
     cols = st.columns(2)
@@ -288,11 +297,11 @@ if right.button("**Future Availability**", use_container_width=True):
 
 if st.session_state.show_future: 
     selected_day = st.selectbox("**Select a Day**", list(day_map.keys()), index=0)
-    selected_time = st.time_input("**Select a Time**", value="now")
+    selected_time = st.time_input("**Select a Time**", value=None)
     day_abbr = day_map[selected_day]
     #Display the available list based on selected time and 
     available_room = avail_class(master_list, selected_time, day_abbr, building_abbr)
-    st.write(f"**As of {selected_day} at {selected_time}, {len(available_room)} available room(s) were found:**")
+    st.write(f"**At {selected_day} {selected_time}, {len(available_room)} room(s) will be available:**")
     # st.write(available_room if available_room else "No rooms available at this time.")
     room_items = list(available_room.items())
     cols = st.columns(2)
@@ -305,9 +314,6 @@ if st.session_state.show_future:
     </div>
     """, unsafe_allow_html=True)
 
-    
-    
-    
         # room_items = list(available_room.items())
         # cols = st.columns(2)
         # for i, (room, available_room[room]) in enumerate(room_items):
@@ -323,3 +329,7 @@ if st.session_state.show_future:
     #for room, available_room[room] in available_room.items():
     #    with st.container():
      #       st.markdown(f"**🏫 {room}** \n⏱️ *{available_room[room]}* ")
+# Instruction for updating main website 
+# git add . 
+# git commit 
+# git push 
