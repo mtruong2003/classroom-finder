@@ -286,10 +286,12 @@ left, right = st.columns(2)
 if left.button("**Available Now**", use_container_width=True):
     st.session_state.show_future = False 
     cur_time = est_zone.now().time()
+    st.write(cur_time)
     if not selected_building:
         selected_building = "All Buildings"
     building_abbr = class_map[selected_building]
     today = est_zone.strftime('%a')[:2]
+    st.write(today)
     display_data(cur_time, today, building_abbr)
 
 if "show_future" not in st.session_state:
@@ -304,9 +306,11 @@ if st.session_state.show_future:
     if not selected_day:
         today = est_zone.strftime('%A')
         selected_day = today 
+        st.write(selected_day)
     if not selected_time: 
         cur_time = est_zone.now().time()
         selected_time = cur_time 
+        st.write(selected_time)
     if not selected_building:
         selected_building = "All Buildings"
     if selected_building and selected_time and selected_day:
