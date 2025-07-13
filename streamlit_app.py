@@ -9,6 +9,15 @@ est_zone = datetime.now(ZoneInfo("America/New_York"))
 
 #CSS STUFF START 
 
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: visible;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
+
 st.markdown("""
 <style>
 .card {
@@ -201,10 +210,12 @@ def free_times(meeting_times):
 
   return free_times
 
-def display_data(selected_time, day_abbr, building_abbr):
+def display_data(selected_time, selected_day, selected_building):
     #Second level button filter for current availability and future availability 
+    day_abbr = day_map[selected_day]
+    building_abbr = class_map[selected_building]
     available_room = avail_class(master_list, selected_time, day_abbr, building_abbr)
-    st.write(f"**At {current_day} {current_time}, {len(available_room)} room(s) were found:**")
+    st.write(f"**At {selected_day} {selected_time.strftime("%H:%M")}, {len(available_room)} room(s) were found:**")
     # st.write(available_room if available_room else "No rooms available at this time.")
     room_items = list(available_room.items())
     cols = st.columns(2)
@@ -288,9 +299,8 @@ if left.button("**Available Now**", use_container_width=True):
     cur_time = est_zone.time()
     if not selected_building:
         selected_building = "All Buildings"
-    building_abbr = class_map[selected_building]
-    today = est_zone.strftime('%a')[:2]
-    display_data(cur_time, today, building_abbr)
+    today = est_zone.strftime('%A')
+    display_data(cur_time, today, selected_building)
 
 if "show_future" not in st.session_state:
     st.session_state.show_future = False
@@ -310,9 +320,7 @@ if st.session_state.show_future:
     if not selected_building:
         selected_building = "All Buildings"
     if selected_building and selected_time and selected_day:
-        building_abbr = class_map[selected_building]
-        day_abbr = day_map[selected_day]
-        display_data(selected_time, day_abbr, building_abbr)
+        display_data(selected_time, selected_day, selected_building)
 
     # Instruction for updating main website 
     # git add . 
