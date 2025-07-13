@@ -215,7 +215,7 @@ def display_data(selected_time, selected_day, selected_building):
     day_abbr = day_map[selected_day]
     building_abbr = class_map[selected_building]
     available_room = avail_class(master_list, selected_time, day_abbr, building_abbr)
-    st.write(f"**At {selected_day} {selected_time.strftime("%H:%M")}, {len(available_room)} room(s) were found:**")
+    st.write(f"**At {selected_day} {selected_time.strftime('%H:%M')}, {len(available_room)} room(s) were found:**")
     # st.write(available_room if available_room else "No rooms available at this time.")
     room_items = list(available_room.items())
     cols = st.columns(2)
