@@ -99,7 +99,7 @@ col1, col2, col3 = st.columns([1, 2, 1])
 with col2:
     st.markdown(f"""
     <div style="text-align:center; font-size: 17px; cursor: default;">
-        Fall, 2025 | {current_day} {current_time}
+        Fall, 2025 | {current_day} {current_time} EST
 </div>
 """, unsafe_allow_html=True)
     
