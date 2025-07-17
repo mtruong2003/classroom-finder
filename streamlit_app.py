@@ -31,17 +31,16 @@ st.markdown("""
     border-radius: 12px;
     background-color: #ffffff;
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    font-family: 'Segoe UI', sans-serif;
 }
 
 .room-label {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     color: #2e2e2e;
 }
 
 .time-label {
-    font-size: 14px;
+    font-size: 16px;
     color: #444;
 }
 </style>
@@ -158,11 +157,11 @@ def avail_class(class_list, selected_time, selected_day, selected_building):
         avail_room[room] = freetime_map
         room_freetime_slots = avail_room[room][cur_day]
         for freetime_slot in room_freetime_slots:
-            if freetime_slot[0] <= cur_time <= freetime_slot[1]: 
+            if freetime_slot[0] < cur_time < freetime_slot[1]: 
                 avail_room[room] = freetime_slot 
                 break 
             avail_room[room] = None 
-    #Remove all none values for rooms
+    # Remove all none values for rooms
     avail_room = {key: value for key, value in avail_room.items() if value} 
     for room in avail_room: 
         avail_for = avail_room[room][1] - cur_time
@@ -327,6 +326,9 @@ if st.session_state.show_future:
     # git commit 
     # git push 
 
+    # cd .. 
+    # source venv/bin/activate
+    # cd classroom-finder 
 
 #SPACING 
 st.write("")
